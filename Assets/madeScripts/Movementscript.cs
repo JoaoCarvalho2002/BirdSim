@@ -14,7 +14,7 @@ public class Movementscript : MonoBehaviour
     public GameObject currentScene;
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public CinemachineTrackedDolly cinemachineTrackedDolly;
-    float unit = 0.1F;
+    [SerializeField]float unit = 0.1F;
     public CinemachineVirtualCamera currentCamera;
 
     private Texture2D screenCapture;
@@ -55,6 +55,8 @@ public class Movementscript : MonoBehaviour
     [SerializeField] private GameObject CrowYES;
     [SerializeField] private GameObject GoldNO;
     [SerializeField] private GameObject GoldYES;
+    [SerializeField] private GameObject SparrowNO;
+    [SerializeField] private GameObject SparrowYES;
 
     private bool bluecheck = false;
     private bool redcheck = false;
@@ -62,13 +64,13 @@ public class Movementscript : MonoBehaviour
     private bool robincheck = false;
     private bool crowcheck = false;
     private bool goldcheck = false;
+    private bool sparrowcheck = false;
     private bool viewingPhoto;
     public bool camOn=false;
 
     public List<Collider> collidersInFrustrum = new();
     void Start()
     {
-        
         Mouselock();
         image1 = pic1.GetComponent<Image>();
         image2 = pic2.GetComponent<Image>();
@@ -143,6 +145,10 @@ public class Movementscript : MonoBehaviour
             lb_Bird bird;
             if(collider.gameObject.TryGetComponent<lb_Bird>(out bird)){
                 //Debug.Log("" + bird.name);
+                if (bird.name == null)
+                {
+                    Debug.Log("NULL");
+                }
                 if(bird.name == "lb_blueJayHQ"){
                     if(currentScene.name == "Scene1" || currentScene.name == "Scene2"){
                         BlueYES.gameObject.SetActive(true);
@@ -156,7 +162,7 @@ public class Movementscript : MonoBehaviour
 
                 }
                 if(bird.name == "lb_cardinalHQ"){
-                    if(currentScene.name == "Scene1" || currentScene.name == "Scene2"){
+                    if(currentScene.name == "Scene1" || currentScene.name == "Scene2" || currentScene.name == "Scene3"){
                         RedYES.gameObject.SetActive(true);
                         RedNO.gameObject.SetActive(false);
                         redcheck=true;
@@ -171,7 +177,7 @@ public class Movementscript : MonoBehaviour
                          
                 }
                 if(bird.name == "lb_chickadeeHQ"){
-                    if (currentScene.name == "Scene1")
+                    if (currentScene.name == "Scene1" || currentScene.name == "Scene3")
                     {
                         ChickaYES.gameObject.SetActive(true);
                         ChickaNO.gameObject.SetActive(false);
@@ -188,7 +194,7 @@ public class Movementscript : MonoBehaviour
                     
                 }
                 if(bird.name == "lb_robinHQ"){
-                    if (currentScene.name == "Scene1" ){
+                    if (currentScene.name == "Scene1" || currentScene.name == "Scene3"){
                         RobinYES.gameObject.SetActive(true);
                         RobinNO.gameObject.SetActive(false);
                         robincheck=true;
@@ -228,6 +234,17 @@ public class Movementscript : MonoBehaviour
                     image4.sprite = screenshotSprite4;
                     
                     
+                }if(bird.name == "lb_sparrowHQ"){
+                    if(currentScene.name == "Scene3"){
+                        SparrowYES.gameObject.SetActive(true);
+                        SparrowNO.gameObject.SetActive(false);
+                        sparrowcheck=true; 
+                    }
+                    
+                    screenCapture = new Texture2D(Screen.width, Screen.height,TextureFormat.RGB24, false);
+                    Sprite screenshotSprite = Sprite.Create(screenCapture, new Rect(0,0,screenCapture.width, screenCapture.height),new Vector2(0.5f,0.5f));
+                    image1.sprite = screenshotSprite;
+
                 }
         
 
@@ -246,10 +263,20 @@ public class Movementscript : MonoBehaviour
 
         Rect regionToRead =new Rect(0, 0, Screen.width,Screen.height);
 
-        screenCapture.ReadPixels(regionToRead,0,0,false);
-        screenCapture.Apply();
-        Debug.Log(screenCapture);
-        ShowPhoto();
+        if (screenCapture!=null)
+        {
+            Debug.Log(screenCapture);
+            screenCapture.ReadPixels(regionToRead,0,0,false);
+            screenCapture.Apply();
+            Debug.Log(screenCapture);
+            ShowPhoto();
+        }else
+        {
+            BirdsUIONOFF.SetActive(true);
+            camOn=!camOn;
+            cinemachineVirtualCamera.m_Lens.FieldOfView = 40;
+        }
+            
     }
     void ShowPhoto()
     {
@@ -278,7 +305,7 @@ public class Movementscript : MonoBehaviour
     }
     void Endgame()
     {
-        if(bluecheck==true && redcheck==true && chickacheck==true && robincheck==true || bluecheck==true && redcheck==true && goldcheck==true && crowcheck==true)
+        if(bluecheck==true && redcheck==true && chickacheck==true && robincheck==true || bluecheck==true && redcheck==true && goldcheck==true && crowcheck==true || redcheck==true && sparrowcheck==true && robincheck==true && chickacheck==true)
         {
             neededScript.StopTimer();
             

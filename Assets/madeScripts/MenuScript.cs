@@ -8,11 +8,25 @@ public class MenuScript : MonoBehaviour
    [SerializeField] private GameObject Showlevels;
    [SerializeField] private GameObject logo;
 
+    [SerializeField] private GameObject pauseMenu;
     public void StartGame()
     {
         Mainmenu.SetActive(false);
         Showlevels.SetActive(true);
 
+    }
+    public void Update()
+    {
+
+        if(Input.GetKeyDown(KeyCode.Escape)) {
+            if (pauseMenu.activeInHierarchy) {
+                SettingsLeave();
+            }
+            else{
+                Settings();
+            }
+            
+        }
     }
     public void backmainmenu()
     {
@@ -20,6 +34,22 @@ public class MenuScript : MonoBehaviour
         Showlevels.SetActive(false);
 
     }
+    public void Settings()
+    {
+        
+        pauseMenu.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+    }
+    public void SettingsLeave()
+    {
+        
+        pauseMenu.SetActive(false);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+    
     public void QuitGame()
     {
         Application.Quit();
@@ -41,13 +71,11 @@ public class MenuScript : MonoBehaviour
         Showlevels.SetActive(false);
         logo.SetActive(false);
     }
-    public void LoadpreviousSCENE()
+    public void LoadLevel3()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-    }
-    public void LoadnextSCENE()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(3);
+        Showlevels.SetActive(false);
+        logo.SetActive(false);
     }
 }
 

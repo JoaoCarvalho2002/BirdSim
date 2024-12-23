@@ -3,36 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.UI;
-public class MouseSensibility : MonoBehaviour// CinemachineExtension
+public class MouseSensibility : MonoBehaviour
 {
     [SerializeField] public Slider slider;
-    [SerializeField] public CinemachineVirtualCamera virtualcam1;
+    [SerializeField] public CinemachineVirtualCamera vcam;
     float CamSensitivity;
     // Start is called before the first frame update
     void Start()
     {
-        CamSensitivity = 0.6f;
+        CamSensitivity = 60;
+        slider.value = CamSensitivity;
+        vcam.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = CamSensitivity;
+        vcam.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = CamSensitivity;
     }
 
     // Update is called once per frame
     void Update()
     {
+        CamSensitivity=slider.value;
+        vcam.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = CamSensitivity;
+        vcam.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = CamSensitivity;
+        
         
     }
-    private void SetCamSensitivity(float sensitivity)
-    {
-        CamSensitivity = sensitivity;
-        
-    }
-   // protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase virtualcam1, CinemachineCore.Stage stage, ref CameraState cameraState  , float r)
-   // {
-        
-       // float speedX = virtualcam1.m_Aim.m_XAxis.m_MaxSpeed;
-       // float speedY = virtualcam1.m_YAxis.m_MaxSpeed;
 
-        //virtualcam1.m_XAxis.m_MaxSpeed = speedX * CamSensitivity;
-        //virtualcam1.m_YAxis.m_MaxSpeed = speedY * CamSensitivity;
-
-       // slider.onValueChanged.AddListener(SetCamSensitivity);
-    //}
 }
